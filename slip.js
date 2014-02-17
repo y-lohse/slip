@@ -129,7 +129,8 @@ window['Slip'] = (function(){
 
         if (!this || this === window) return new Slip(container, options);
 
-        this.options = options;
+        this.options = options || {};
+        this.options.reorderClass = this.options.reorderClass || 'slip-reordering';
 
         // Functions used for as event handlers need usable `this` and must not change to be removable
         this.cancel = this.setState.bind(this, this.states.idle);
@@ -335,7 +336,7 @@ window['Slip'] = (function(){
                     });
                 }
 
-                this.target.node.className += ' slip-reordering';
+                this.target.node.className += ' '+this.options.reorderClass;
                 this.target.node.style.zIndex = '99999';
                 this.target.node.style[userSelectPrefix] = 'none';
                 if (compositorDoesNotOrderLayers) {
@@ -377,7 +378,8 @@ window['Slip'] = (function(){
                             this.container.style.webkitTransformStyle = '';
                         }
 
-                        this.target.node.className = this.target.node.className.replace(/(?:^| )slip-reordering/,'');
+//                        this.target.node.className = this.target.node.className.replace(/(?:^| )slip-reordering/,'');
+                        this.target.node.className = this.target.node.className.replace(new RegExp('(?:^| )' + this.options.reorderClass + '/'),'');
                         this.target.node.style[userSelectPrefix] = '';
 
                         this.animateToZero(function(target){
